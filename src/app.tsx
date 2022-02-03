@@ -91,7 +91,7 @@ const App = () => {
 						<div
 							onClick={() => setFocusData(d)}
 							className={
-								"p-6 rounded hover:shadow-2xl translate hover:shadow-black duration-150 cursor-pointer motion-safe:hover:-translate-y-1 transition-transform w-full md:w-fit " +
+								"p-6 rounded hover:shadow-2xl translate hover:shadow-slate-300 dark:hover:shadow-black duration-150 cursor-pointer motion-safe:hover:-translate-y-1 transition-all w-full md:w-fit " +
 								(parseFloat(d.average) < 5
 									? "bg-orange-300"
 									: parseFloat(d.average) < 4
