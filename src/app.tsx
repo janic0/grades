@@ -34,7 +34,7 @@ const App = () => {
 				{focusData ? (
 					<div
 						onClick={(e) => {
-							if ((e.target as any).id === "modal-bg") {
+							if ((e.target as unknown as { id: string }).id === "modal-bg") {
 								setFocusData(undefined);
 							}
 						}}
