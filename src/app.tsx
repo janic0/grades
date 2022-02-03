@@ -30,7 +30,12 @@ const App = () => {
 	}, []);
 	if (data) {
 		return (
-			<div className="dark:text-white text-white p-8 md:p-10 xl:p-20 flex gap-8 flex-wrap">
+			<div
+				className={
+					"dark:text-white text-white p-8 md:p-10 xl:p-20 " +
+					(focusData ? "h-screen overflow-hidden" : "")
+				}
+			>
 				{focusData ? (
 					<div
 						onClick={(e) => {
@@ -59,20 +64,20 @@ const App = () => {
 							<table className="mt-5 w-full">
 								<thead>
 									<tr>
-										<td>Datum</td>
-										<td>Thema</td>
-										<td>Bewertung</td>
-										<td>Durchschnitt</td>
-										<td>Gewicht</td>
+										<td className="hidden md:block">Datum</td>
+										<td>Topic</td>
+										<td>Grade</td>
+										<td className="hidden md:block">Durchschnitt</td>
+										<td>Weight</td>
 									</tr>
 								</thead>
 								<tbody>
 									{focusData.items.map((item, i) => (
 										<tr key={i} className="">
-											<td>{item.datum}</td>
+											<td className="hidden md:block">{item.datum}</td>
 											<td>{item.thema}</td>
 											<td>{item.bewertung}</td>
-											<td>{item.schnitt}</td>
+											<td className="hidden md:block">{item.schnitt}</td>
 											<td>{item.gewichtung}</td>
 										</tr>
 									))}
@@ -81,25 +86,27 @@ const App = () => {
 						</div>
 					</div>
 				) : null}
-				{data.map((d, i) => (
-					<div
-						onClick={() => setFocusData(d)}
-						className={
-							"p-10 rounded hover:shadow-2xl duration-150 cursor-pointer motion-safe:hover:-translate-y-2 transition-transform w-full md:w-fit " +
-							(parseFloat(d.average) < 5
-								? "bg-orange-300"
-								: parseFloat(d.average) < 4
-								? "bg-red-500"
-								: "bg-green-500")
-						}
-						key={i}
-					>
-						<h1>{d.title}</h1>
-						<p className="text-slate-800 dark:text-slate-200">
-							{d.description}
-						</p>
-					</div>
-				))}
+				<div className="flex gap-4 flex-wrap">
+					{data.map((d, i) => (
+						<div
+							onClick={() => setFocusData(d)}
+							className={
+								"p-6 rounded hover:shadow-2xl translate hover:shadow-black duration-150 cursor-pointer motion-safe:hover:-translate-y-1 transition-transform w-full md:w-fit " +
+								(parseFloat(d.average) < 5
+									? "bg-orange-300"
+									: parseFloat(d.average) < 4
+									? "bg-red-500"
+									: "bg-green-500")
+							}
+							key={i}
+						>
+							<h1>{d.title}</h1>
+							<p className="text-slate-800 dark:text-slate-200">
+								{d.description}
+							</p>
+						</div>
+					))}
+				</div>
 			</div>
 		);
 	} else {
