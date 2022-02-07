@@ -10,6 +10,9 @@ export interface Item {
 	schnitt: string;
 }
 
+interface focusData extends data {
+	visible: boolean;
+}
 export interface data {
 	title: string;
 	description: string;
@@ -19,7 +22,7 @@ export interface data {
 
 const App = () => {
 	const [data, setData] = useState<data[] | undefined>(undefined);
-	const [focusData, setFocusData] = useState<data | undefined>(undefined);
+	const [focusData, setFocusData] = useState<focusData | undefined>(undefined);
 	useEffect(() => {
 		fetch("https://grades.janic.io/", { method: "GET" }).then((response) => {
 			response.json().then((data) => {
@@ -38,39 +41,33 @@ const App = () => {
 				<div
 					onClick={(e) => {
 						if ((e.target as unknown as { id: string }).id === "modal-bg") {
-							setFocusData(undefined);
+							if (focusData) setFocusData({ ...focusData, visible: false });
+							else setFocusData(undefined);
 						}
 					}}
 					id="modal-bg"
 					className={
 						"absolute w-full h-full z-10 left-0 transition-transform top-0 flex justify-center items-center backdrop-blur-lg " +
-						(focusData ? "scale-100" : "scale-0")
+						(focusData?.visible ? "scale-100" : "scale-0")
 					}
 				>
 					<div className="w-full md:w-1/2 bg-slate-500 rounded p-6">
 						<h1 className="text-3xl">{focusData?.description}</h1>
 						<h1>{focusData?.title}</h1>
-						{() => {
-							const average = parseFloat(focusData ? focusData.average : "--");
-							if (isNaN(average))
-								return (
-									<div
-										className={
-											"text-center mt-5 p-4 rounded " +
-											(isNaN(average)
-												? "bg-gray-500"
-												: average < 5
-												? "bg-orange-300"
-												: average < 4
-												? "bg-red-500"
-												: "bg-green-500")
-										}
-									>
-										{focusData?.average}
-									</div>
-								);
-							else return <div></div>;
-						}}
+						{!isNaN(focusData ? parseFloat(focusData.average) : 0) ? (
+							<div
+								className={
+									"text-center mt-5 p-4 rounded " +
+									(parseFloat(focusData ? focusData.average : "-") < 5
+										? "bg-orange-300"
+										: parseFloat(focusData ? focusData.average : "-") < 4
+										? "bg-red-500"
+										: "bg-green-500")
+								}
+							>
+								{focusData?.average}
+							</div>
+						) : null}
 						{focusData?.items.length ? (
 							<table className="mt-5 w-full">
 								<thead>
@@ -106,7 +103,7 @@ const App = () => {
 						const average = parseFloat(d.average);
 						return (
 							<div
-								onClick={() => setFocusData(d)}
+								onClick={() => setFocusData({ ...d, visible: true })}
 								className={
 									"p-6 rounded hover:shadow-2xl translate hover:shadow-slate-300 dark:hover:shadow-black duration-150 cursor-pointer motion-safe:hover:-translate-y-1 transition-all w-full md:w-fit " +
 									(isNaN(average)
