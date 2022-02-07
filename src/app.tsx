@@ -35,67 +35,68 @@ const App = () => {
 					(focusData ? "h-screen overflow-hidden" : "")
 				}
 			>
-				{focusData ? (
-					<div
-						onClick={(e) => {
-							if ((e.target as unknown as { id: string }).id === "modal-bg") {
-								setFocusData(undefined);
-							}
+				<div
+					onClick={(e) => {
+						if ((e.target as unknown as { id: string }).id === "modal-bg") {
+							setFocusData(undefined);
+						}
+					}}
+					id="modal-bg"
+					className={
+						"absolute w-full h-full z-10 left-0 transition-transform top-0 flex justify-center items-center backdrop-blur-lg " +
+						(focusData ? "scale-100" : "scale-0")
+					}
+				>
+					<div className="w-full md:w-1/2 bg-slate-500 rounded p-6">
+						<h1 className="text-3xl">{focusData?.description}</h1>
+						<h1>{focusData?.title}</h1>
+						{() => {
+							const average = parseFloat(focusData ? focusData.average : "--");
+							<div
+								className={
+									"text-center mt-5 p-4 rounded " +
+									(isNaN(average)
+										? "bg-gray-500"
+										: average < 5
+										? "bg-orange-300"
+										: average < 4
+										? "bg-red-500"
+										: "bg-green-500")
+								}
+							>
+								{focusData?.average}
+							</div>;
 						}}
-						id="modal-bg"
-						className="absolute w-full h-full z-10 left-0 top-0 flex justify-center items-center backdrop-blur-lg"
-					>
-						<div className="w-full md:w-1/2 bg-slate-500 rounded p-6">
-							<h1 className="text-3xl">{focusData.description}</h1>
-							<h1>{focusData.title}</h1>
-							{() => {
-								const average = parseFloat(focusData.average);
-								<div
-									className={
-										"text-center mt-5 p-4 rounded " +
-										(isNaN(average)
-											? "bg-gray-500"
-											: average < 5
-											? "bg-orange-300"
-											: average < 4
-											? "bg-red-500"
-											: "bg-green-500")
-									}
-								>
-									{focusData.average}
-								</div>;
-							}}
-							{focusData.items.length ? (
-								<table className="mt-5 w-full">
-									<thead>
-										<tr>
-											<td className="hidden md:block">Datum</td>
-											<td>Topic</td>
-											<td>Grade</td>
-											<td className="hidden md:block">Durchschnitt</td>
-											<td>Weight</td>
+						{focusData?.items.length ? (
+							<table className="mt-5 w-full">
+								<thead>
+									<tr>
+										<td className="hidden md:block">Datum</td>
+										<td>Topic</td>
+										<td>Grade</td>
+										<td className="hidden md:block">Durchschnitt</td>
+										<td>Weight</td>
+									</tr>
+								</thead>
+								<tbody>
+									{focusData.items.map((item, i) => (
+										<tr key={i} className="">
+											<td className="hidden md:block">{item.datum}</td>
+											<td>{item.thema}</td>
+											<td>{item.bewertung}</td>
+											<td className="hidden md:block">{item.schnitt}</td>
+											<td>{item.gewichtung}</td>
 										</tr>
-									</thead>
-									<tbody>
-										{focusData.items.map((item, i) => (
-											<tr key={i} className="">
-												<td className="hidden md:block">{item.datum}</td>
-												<td>{item.thema}</td>
-												<td>{item.bewertung}</td>
-												<td className="hidden md:block">{item.schnitt}</td>
-												<td>{item.gewichtung}</td>
-											</tr>
-										))}
-									</tbody>
-								</table>
-							) : (
-								<div className="text-center bg-gray-600 p-4 mt-4 rounded">
-									no grades yet
-								</div>
-							)}
-						</div>
+									))}
+								</tbody>
+							</table>
+						) : (
+							<div className="text-center bg-gray-600 p-4 mt-4 rounded">
+								no grades yet
+							</div>
+						)}
 					</div>
-				) : null}
+				</div>
 				<div className="flex gap-4 flex-wrap">
 					{data.map((d, i) => {
 						const average = parseFloat(d.average);
