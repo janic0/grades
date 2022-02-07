@@ -52,20 +52,22 @@ const App = () => {
 						<h1>{focusData?.title}</h1>
 						{() => {
 							const average = parseFloat(focusData ? focusData.average : "--");
-							<div
-								className={
-									"text-center mt-5 p-4 rounded " +
-									(isNaN(average)
-										? "bg-gray-500"
-										: average < 5
-										? "bg-orange-300"
-										: average < 4
-										? "bg-red-500"
-										: "bg-green-500")
-								}
-							>
-								{focusData?.average}
-							</div>;
+							return (
+								<div
+									className={
+										"text-center mt-5 p-4 rounded " +
+										(isNaN(average)
+											? "bg-gray-500"
+											: average < 5
+											? "bg-orange-300"
+											: average < 4
+											? "bg-red-500"
+											: "bg-green-500")
+									}
+								>
+									{focusData?.average}
+								</div>
+							);
 						}}
 						{focusData?.items.length ? (
 							<table className="mt-5 w-full">
