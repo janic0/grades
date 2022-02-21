@@ -35,7 +35,7 @@ const App = () => {
 			<div
 				className={
 					"dark:text-white text-white p-8 md:p-10 xl:p-20 " +
-					(focusData ? "h-screen overflow-hidden" : "")
+					(focusData?.visible ? "h-screen overflow-hidden" : "")
 				}
 			>
 				<div
