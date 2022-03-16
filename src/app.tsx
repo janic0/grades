@@ -107,14 +107,14 @@ const App = () => {
 									isNaN(average) ? "" : setFocusData({ ...d, visible: true })
 								}
 								className={
-									"p-6 rounded translate hover:shadow-slate-300 dark:hover:shadow-black duration-150 cursor-pointer transition-all w-full md:w-fit " +
+									"p-6 rounded translate hover:shadow-slate-300 dark:hover:shadow-black duration-150 transition-all w-full md:w-fit " +
 									(isNaN(average)
 										? "bg-gray-500"
 										: (average < 5
 												? "bg-orange-300"
 												: average < 4
 												? "bg-red-500"
-												: "bg-green-500") +" hover:shadow-2xl motion-safe:hover:-translate-y-1")
+												: "bg-green-500") +" cursor-pointer hover:shadow-2xl motion-safe:hover:-translate-y-1")
 								}
 								key={i}
 							>
