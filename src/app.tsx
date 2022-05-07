@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import { useEffect, useState } from "react";
 import React from "react";
 import "./styles/index.css";
@@ -14,6 +15,7 @@ interface focusData extends data {
 	visible: boolean;
 }
 export interface data {
+	isSkeleton: boolean;
 	title: string;
 	description: string;
 	average: string;
@@ -24,9 +26,16 @@ const App = () => {
 	const [data, setData] = useState<data[] | undefined>(undefined);
 	const [focusData, setFocusData] = useState<focusData | undefined>(undefined);
 	useEffect(() => {
+		const cached = window.localStorage.getItem("data-cache");
+		if (cached)
+			setData(
+				JSON.parse(cached).map((d: data) => ({ ...d, isSkeleton: true }))
+			);
+
 		fetch("https://grades.janic.io/", { method: "GET" }).then((response) => {
 			response.json().then((data) => {
 				setData(data.data);
+				window.localStorage.setItem("data-cache", JSON.stringify(data.data));
 			});
 		});
 	}, []);
@@ -104,22 +113,30 @@ const App = () => {
 						return (
 							<div
 								onClick={() =>
-									isNaN(average) ? "" : setFocusData({ ...d, visible: true })
+									isNaN(average) || d.isSkeleton
+										? ""
+										: setFocusData({ ...d, visible: true })
 								}
 								className={
-									"p-6 rounded translate hover:shadow-slate-300 dark:hover:shadow-black duration-150 transition-all w-full md:w-fit " +
-									(isNaN(average)
-										? "bg-gray-500"
-										: (average < 5
-												? "bg-orange-300"
-												: average < 4
-												? "bg-red-500"
-												: "bg-green-500") +" cursor-pointer hover:shadow-2xl motion-safe:hover:-translate-y-1")
+									d.isSkeleton
+										? "p-6 bg-slate-200 dark:bg-slate-800 rounded w-full md:w-fit"
+										: "p-6 rounded translate hover:shadow-slate-300 dark:hover:shadow-black duration-150 transition-all w-full md:w-fit " +
+										  (isNaN(average)
+												? "bg-gray-500"
+												: (average < 5
+														? "bg-orange-300"
+														: average < 4
+														? "bg-red-500"
+														: "bg-green-500") +
+												  " cursor-pointer hover:shadow-2xl motion-safe:hover:-translate-y-1")
 								}
 								key={i}
 							>
-								<h1>{d.title}</h1>
-								<p className="text-slate-800 dark:text-slate-200">
+								<h1 style={{ opacity: d.isSkeleton ? 0 : 1 }}>{d.title}</h1>
+								<p
+									style={{ opacity: d.isSkeleton ? 0 : 1 }}
+									className="text-slate-800 dark:text-slate-200"
+								>
 									{d.description}
 								</p>
 							</div>
@@ -129,11 +146,7 @@ const App = () => {
 			</div>
 		);
 	} else {
-		return (
-			<div className="h-screen w-screen flex justify-center items-center">
-				<p className="dark:text-white animate-spin text-8xl text-center">◠</p>;
-			</div>
-		);
+		return <div></div>;
 	}
 };
 
